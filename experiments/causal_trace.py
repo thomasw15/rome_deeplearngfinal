@@ -184,7 +184,8 @@ def trace_with_patch(
         noise_fn = lambda x: noise * x
     else:
         noise_fn = noise
-
+        
+    # this is where the noise is added!
     def patch_rep(x, layer):
         if layer == embed_layername:
             # If requested, we corrupt a range of token embeddings on batch items x[1:]
