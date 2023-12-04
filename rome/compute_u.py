@@ -67,7 +67,7 @@ def compute_u(
     Computes the right vector used in constructing the rank-1 update matrix.
     """
 
-    print("Computing left vector (u)... THIS LINE HAS BEEN CHANGED AS WELL!!!!!!!!!!!!!!!!!!")
+    print("Computing left vector (u)... ")
 
     # Compute projection token
     word_repr_args = dict(
@@ -78,7 +78,7 @@ def compute_u(
         track="in",
     )
     if "subject_" in hparams.fact_token and hparams.fact_token.index("subject_") == 0:
-        word = request["subject"]
+        word = request["subject"][0]
         print("the word is")
         print(word)
         print(f"Selected u projection object {word}, THIS LINE HAS BEEN CHANGED!!!")
