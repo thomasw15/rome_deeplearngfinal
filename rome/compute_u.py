@@ -67,7 +67,7 @@ def compute_u(
     Computes the right vector used in constructing the rank-1 update matrix.
     """
 
-    print("Computing left vector (u)...")
+    print("Computing left vector (u)... THIS LINE HAS BEEN CHANGED AS WELL!!!!!!!!!!!!!!!!!!")
 
     # Compute projection token
     word_repr_args = dict(
