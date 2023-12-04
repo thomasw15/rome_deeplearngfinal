@@ -79,6 +79,8 @@ def compute_u(
     )
     if "subject_" in hparams.fact_token and hparams.fact_token.index("subject_") == 0:
         word = request["subject"]
+        print("the word is")
+        print(word)
         print(f"Selected u projection object {word}")
         cur_repr = repr_tools.get_reprs_at_word_tokens(
             context_templates=[
