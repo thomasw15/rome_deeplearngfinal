@@ -115,7 +115,7 @@ def execute_rome(
             # Determine correct transposition of delta matrix
             weight_name = f"{hparams.rewrite_module_tmp.format(layer)}.weight"
             print("Left matrix shape:", left_vector.t().shape)
-            print("Right matrix shape:", right_vector.unsqueeze(0).shape)
+            print("Right matrix shape:", right_vector.shape)
             upd_matrix = left_vector.t() @ right_vector
             upd_matrix = upd_matrix_match_shape(upd_matrix, weights[weight_name].shape)
 
