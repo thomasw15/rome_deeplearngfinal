@@ -116,7 +116,7 @@ def execute_rome(
             weight_name = f"{hparams.rewrite_module_tmp.format(layer)}.weight"
             print("Left matrix shape:", left_vector.t().shape)
             print("Right matrix shape:", right_vector.shape)
-            upd_matrix = left_vector.t() @ right_vector
+            upd_matrix = right_vector @ left_vector.t() 
             upd_matrix = upd_matrix_match_shape(upd_matrix, weights[weight_name].shape)
 
             # Update model weights and record desired changes in `delta` variable
