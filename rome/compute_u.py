@@ -140,7 +140,7 @@ def compute_u(
             hparams.mom2_n_samples,
             hparams.mom2_dtype,
         ) @ u1.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
-        u1 = u.squeeze()
+        u1 = u1.squeeze()
         u1 = u1 / u1.norm()
         u2 = get_inv_cov(
             model,
@@ -150,7 +150,7 @@ def compute_u(
             hparams.mom2_n_samples,
             hparams.mom2_dtype,
         ) @ u1.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
-        u2 = u.squeeze()
+        u2 = u2.squeeze()
         u2 = u2 / u2.norm()
 
     return torch.stack((u1, u2), dim=1)
