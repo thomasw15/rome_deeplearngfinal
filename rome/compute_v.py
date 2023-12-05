@@ -163,11 +163,11 @@ def compute_v(
             with torch.no_grad():
                 delta[...] = delta * max_norm / delta.norm()
 
-    target = target_init + delta
+    target0 = target_init + delta
 
     # Retrieve cur_input, the current input to the 2nd MLP layer, and
     # cur_output, the original output of the 2nd MLP layer.
-    cur_input, cur_output = get_module_input_output_at_word(
+    cur_input0, cur_output0 = get_module_input_output_at_word(
         model,
         tok,
         layer,
@@ -176,15 +176,6 @@ def compute_v(
         module_template=hparams.rewrite_module_tmp,
         fact_token_strategy=hparams.fact_token,
     )
-
-    # Solving the linear system to compute the right vector
-    right_vector0 = (target - cur_output) / torch.dot(cur_input, left_vector)
-    print(f"Delta norm: {(target - cur_output).norm().item()}")
-    print(
-        f"Change in target norm: {target_init.norm().item()} to {target.norm().item()} => {(target.norm() - target_init.norm()).item()}"
-    )
-    print(f"Division Factor: {torch.dot(cur_input, left_vector).item()}")
-    print(f"Right vector norm: {right_vector.norm()}")
 
     print("Computing right vector (v1)")
 
@@ -324,11 +315,11 @@ def compute_v(
             with torch.no_grad():
                 delta[...] = delta * max_norm / delta.norm()
 
-    target = target_init + delta
+    target1 = target_init + delta
 
     # Retrieve cur_input, the current input to the 2nd MLP layer, and
     # cur_output, the original output of the 2nd MLP layer.
-    cur_input, cur_output = get_module_input_output_at_word(
+    cur_input1, cur_output1 = get_module_input_output_at_word(
         model,
         tok,
         layer,
@@ -338,16 +329,23 @@ def compute_v(
         fact_token_strategy=hparams.fact_token,
     )
 
+    target = torch.stack((target0, target1), dim=1)
+    cur_output = torch.stack((cur_output0, cur_output1), dim=1)
     # Solving the linear system to compute the right vector
-    right_vector1 = (target - cur_output) / torch.dot(cur_input, left_vector)
+    # this is where the computation changes
+    prod = left_vector.t() @ cur_input
+    inv = torch.inverse(
+            prod
+        ).float()
+    right_matrix = (target - cur_output) @ prod
     print(f"Delta norm: {(target - cur_output).norm().item()}")
     print(
         f"Change in target norm: {target_init.norm().item()} to {target.norm().item()} => {(target.norm() - target_init.norm()).item()}"
     )
     print(f"Division Factor: {torch.dot(cur_input, left_vector).item()}")
-    print(f"Right vector norm: {right_vector.norm()}")
+    print(f"Right vector norm: {right_matrix.norm()}")
 
-    return right_vector
+    return right_matrix
 
 
 def get_module_input_output_at_word(
