@@ -119,9 +119,9 @@ def execute_rome(
             print("Left matrix shape:", left_vector.t().shape)
             print("Right matrix shape:", right_vector.shape)
             print("Right matrix shape:", right_vector.shape)
+            upd_matrix = right_vector @ left_vector.t() 
             print("update matrix shape:", upd_matrix.shape)
             print("weight matrix shape",weights[weight_name].shape)
-            upd_matrix = right_vector @ left_vector.t() 
             upd_matrix = upd_matrix_match_shape(upd_matrix, weights[weight_name].shape)
 
             # Update model weights and record desired changes in `delta` variable
