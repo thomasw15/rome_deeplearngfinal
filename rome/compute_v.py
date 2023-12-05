@@ -266,3 +266,33 @@ def find_fact_lookup_idx(
         )
 
     return ret
+
+def compute_v_for_targets(
+    model: AutoModelForCausalLM,
+    tok: AutoTokenizer,
+    request: Dict,
+    hparams: ROMEHyperParams,
+    layer: int,
+    left_vector: torch.Tensor,
+    context_templates: List[str],
+) -> List[torch.Tensor]:
+    """
+    Computes the value (right) vector for the rank-1 update for each target separately.
+    Runs a simple optimization procedure.
+    """
+
+    right_vectors = []
+
+    for target_element in request["target_new"]:
+        right_vector = compute_v(
+            model,
+            tok,
+            {"target_new": {"str": target_element}, "prompt": request["prompt"], "subject": request["subject"]},
+            hparams,
+            layer,
+            left_vector,
+            context_templates,
+        )
+        right_vectors.append(right_vector)
+
+    return right_vectors
