@@ -331,6 +331,7 @@ def compute_v(
 
     target = torch.stack((target0, target1), dim=1)
     cur_output = torch.stack((cur_output0, cur_output1), dim=1)
+    cur_input = torch.stack((cur_input0, cur_input1), dim=1)
     # Solving the linear system to compute the right vector
     # this is where the computation changes
     prod = left_vector.t() @ cur_input
