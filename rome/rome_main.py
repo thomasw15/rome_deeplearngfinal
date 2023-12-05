@@ -41,7 +41,9 @@ def apply_rome_to_model(
 
         with torch.no_grad():
             for w_name, (delta_u, delta_v) in deltas.items():
-                upd_matrix = delta_v @ delta_u
+                upd_matrix = delta_u.t() @ delta_v
+                print("delta matrix shape:", upd_matrix.shape)
+                print("w matrix shape:", w.shape)
                 w = nethook.get_parameter(model, w_name)
                 upd_matrix = upd_matrix_match_shape(upd_matrix, w.shape)
 
@@ -116,6 +118,9 @@ def execute_rome(
             weight_name = f"{hparams.rewrite_module_tmp.format(layer)}.weight"
             print("Left matrix shape:", left_vector.t().shape)
             print("Right matrix shape:", right_vector.shape)
+            print("Right matrix shape:", right_vector.shape)
+            print("update matrix shape:", upd_matrix.shape)
+            print("weight matrix shape",weights[weight_name].shape)
             upd_matrix = right_vector @ left_vector.t() 
             upd_matrix = upd_matrix_match_shape(upd_matrix, weights[weight_name].shape)
 
