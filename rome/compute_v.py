@@ -343,7 +343,7 @@ def compute_v(
     print(
         f"Change in target norm: {target_init.norm().item()} to {target.norm().item()} => {(target.norm() - target_init.norm()).item()}"
     )
-    print(f"Division Factor: {prod.item()}")
+    print(f"Division Factor: {prod}")
     print(f"Right vector norm: {right_matrix.norm()}")
 
     return right_matrix
