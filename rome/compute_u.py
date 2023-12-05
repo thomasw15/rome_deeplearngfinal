@@ -79,13 +79,25 @@ def compute_u(
     )
     # this section basically find the vector k
     if "subject_" in hparams.fact_token and hparams.fact_token.index("subject_") == 0:
-        word = request["subject"]
+        word = request["subject"][0]
         print("the word is")
         print(word)
         print(f"Selected u projection object {word}, THIS LINE HAS BEEN CHANGED!!!")
-        cur_repr = repr_tools.get_reprs_at_word_tokens(
+        cur_repr0 = repr_tools.get_reprs_at_word_tokens(
             context_templates=[
-                templ.format(request["prompt"]) for templ in context_templates
+                templ.format(request["prompt"][0]) for templ in context_templates
+            ],
+            words=[word for _ in range(len(context_templates))],
+            subtoken=hparams.fact_token[len("subject_") :],
+            **word_repr_args,
+        ).mean(0)
+        word = request["subject"][1]
+        print("the word is")
+        print(word)
+        print(f"Selected u projection object {word}, THIS LINE HAS BEEN CHANGED!!!")
+        cur_repr1 = repr_tools.get_reprs_at_word_tokens(
+            context_templates=[
+                templ.format(request["prompt"][1]) for templ in context_templates
             ],
             words=[word for _ in range(len(context_templates))],
             subtoken=hparams.fact_token[len("subject_") :],
@@ -95,9 +107,18 @@ def compute_u(
         # Heuristic to choose last word. Not a huge deal if there's a minor
         # edge case (e.g. multi-token word) because the function below will
         # take the last token.
-        cur_repr = repr_tools.get_reprs_at_idxs(
+        cur_repr0 = repr_tools.get_reprs_at_idxs(
             contexts=[
-                templ.format(request["prompt"].format(request["subject"]))
+                templ.format(request["prompt"][0].format(request["subject"][0]))
+                for templ in context_templates
+            ],
+            idxs=[[-1] for _ in range(len(context_templates))],
+            **word_repr_args,
+        ).mean(0)
+
+        cur_repr1 = repr_tools.get_reprs_at_idxs(
+            contexts=[
+                templ.format(request["prompt"][1].format(request["subject"][1]))
                 for templ in context_templates
             ],
             idxs=[[-1] for _ in range(len(context_templates))],
@@ -108,16 +129,28 @@ def compute_u(
         raise ValueError(f"fact_token={hparams.fact_token} not recognized")
 
     # Apply inverse second moment adjustment
-    u = cur_repr
+    u1 = cur_repr1
+    u2 = cur_repr2
     if hparams.mom2_adjustment:
-        u = get_inv_cov(
+        u1 = get_inv_cov(
             model,
             tok,
             hparams.rewrite_module_tmp.format(layer),
             hparams.mom2_dataset,
             hparams.mom2_n_samples,
             hparams.mom2_dtype,
-        ) @ u.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
-        u = u.squeeze()
+        ) @ u1.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
+        u1 = u.squeeze()
+        u1 = u1 / u1.norm()
+        u2 = get_inv_cov(
+            model,
+            tok,
+            hparams.rewrite_module_tmp.format(layer),
+            hparams.mom2_dataset,
+            hparams.mom2_n_samples,
+            hparams.mom2_dtype,
+        ) @ u1.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
+        u2 = u.squeeze()
+        u2 = u2 / u2.norm()
 
-    return u / u.norm()
+    return torch.stack((u1, u2), dim=1)
