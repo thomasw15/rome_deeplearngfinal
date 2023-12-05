@@ -78,7 +78,7 @@ def compute_u(
         track="in",
     )
     if "subject_" in hparams.fact_token and hparams.fact_token.index("subject_") == 0:
-        word = request["subject"][0]
+        word = request["subject"]
         print("the word is")
         print(word)
         print(f"Selected u projection object {word}, THIS LINE HAS BEEN CHANGED!!!")
