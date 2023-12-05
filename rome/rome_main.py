@@ -43,8 +43,8 @@ def apply_rome_to_model(
             for w_name, (delta_u, delta_v) in deltas.items():
                 upd_matrix =  delta_v @ delta_u.t() 
                 print("delta matrix shape:", upd_matrix.shape)
-                print("w matrix shape:", w.shape)
                 w = nethook.get_parameter(model, w_name)
+                print("w matrix shape:", w.shape)
                 upd_matrix = upd_matrix_match_shape(upd_matrix, w.shape)
 
                 if return_orig_weights and w_name not in weights_copy:
