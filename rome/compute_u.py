@@ -129,8 +129,8 @@ def compute_u(
         raise ValueError(f"fact_token={hparams.fact_token} not recognized")
 
     # Apply inverse second moment adjustment
+    u0 = cur_repr0
     u1 = cur_repr1
-    u2 = cur_repr2
     if hparams.mom2_adjustment:
         u1 = get_inv_cov(
             model,
