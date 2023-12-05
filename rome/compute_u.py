@@ -77,6 +77,7 @@ def compute_u(
         module_template=hparams.rewrite_module_tmp,
         track="in",
     )
+    # this section basically find the vector k
     if "subject_" in hparams.fact_token and hparams.fact_token.index("subject_") == 0:
         word = request["subject"]
         print("the word is")
@@ -116,7 +117,7 @@ def compute_u(
             hparams.mom2_dataset,
             hparams.mom2_n_samples,
             hparams.mom2_dtype,
-        ) @ u.unsqueeze(1)
+        ) @ u.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
         u = u.squeeze()
 
     return u / u.norm()
