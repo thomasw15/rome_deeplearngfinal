@@ -69,12 +69,12 @@ def execute_rome(
 
     # Update target and print info
     request = deepcopy(request)
-    if request["target_new"]["str"][0] != " ":
+    if request["target_new"][0]["str"][0] != " ":
         # Space required for correct tokenization
-        request["target_new"]["str"] = " " + request["target_new"]["str"]
+        request["target_new"][0]["str"] = " " + request["target_new"][0]["str"]
     print(
         f"Executing ROME algorithm for the update: "
-        f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']['str']}]"
+        f"[{request['prompt'][0].format(request['subject'][0])}] -> [{request['target_new'][0]['str']}]"
     )
 
     # Retrieve weights that user desires to change
