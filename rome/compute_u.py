@@ -80,9 +80,7 @@ def compute_u(
     # this section basically find the vector k
     if "subject_" in hparams.fact_token and hparams.fact_token.index("subject_") == 0:
         word = request["subject"][0]
-        print("the word is")
-        print(word)
-        print(f"Selected u projection object {word}, THIS LINE HAS BEEN CHANGED!!!")
+        print(f"Selected u projection object {word}")
         cur_repr0 = repr_tools.get_reprs_at_word_tokens(
             context_templates=[
                 templ.format(request["prompt"][0]) for templ in context_templates
@@ -92,9 +90,7 @@ def compute_u(
             **word_repr_args,
         ).mean(0)
         word = request["subject"][1]
-        print("the word is")
-        print(word)
-        print(f"Selected u projection object {word}, THIS LINE HAS BEEN CHANGED!!!")
+        print(f"Selected u projection object {word})
         cur_repr1 = repr_tools.get_reprs_at_word_tokens(
             context_templates=[
                 templ.format(request["prompt"][1]) for templ in context_templates
