@@ -90,7 +90,7 @@ def compute_u(
             **word_repr_args,
         ).mean(0)
         word = request["subject"][1]
-        print(f"Selected u projection object {word})
+        print(f"Selected u projection object {word}")
         cur_repr1 = repr_tools.get_reprs_at_word_tokens(
             context_templates=[
                 templ.format(request["prompt"][1]) for templ in context_templates
