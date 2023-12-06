@@ -78,6 +78,13 @@ def execute_rome(
         f"Executing ROME algorithm for the update: "
         f"[{request['prompt'][0].format(request['subject'][0])}] -> [{request['target_new'][0]['str']}]"
     )
+    if request["target_new"][1]["str"][0] != " ":
+        # Space required for correct tokenization
+        request["target_new"][1]["str"] = " " + request["target_new"][1]["str"]
+    print(
+        f"Executing ROME algorithm for the update: "
+        f"[{request['prompt'][1].format(request['subject'][0])}] -> [{request['target_new'][1]['str']}]"
+    )
 
     # Retrieve weights that user desires to change
     weights = {
