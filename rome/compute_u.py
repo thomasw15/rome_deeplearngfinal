@@ -128,6 +128,7 @@ def compute_u(
     u0 = cur_repr0
     u1 = cur_repr1
     if hparams.mom2_adjustment:
+        """
         u0 = get_inv_cov(
             model,
             tok,
@@ -148,5 +149,15 @@ def compute_u(
         ) @ u1.unsqueeze(1) # the @ here is matrix multiplication. So the task now is to find how to the get the different k's above.
         u1 = u1.squeeze()
         u1 = u1 / u1.norm()
-
-    return torch.stack((u0, u1), dim=1)
+        """
+        u = torch.stack((u0, u1), dim=1)
+        u = get_inv_cov(
+            model,
+            tok,
+            hparams.rewrite_module_tmp.format(layer),
+            hparams.mom2_dataset,
+            hparams.mom2_n_samples,
+            hparams.mom2_dtype,
+        ) @ u
+        u = u/u.norm()
+    return u
