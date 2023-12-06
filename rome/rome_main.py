@@ -100,6 +100,7 @@ def execute_rome(
     # Update loop: sequentially intervene at each specified layer
     deltas = {}
     for layer in sorted(hparams.layers):
+        print(f"In execute_rome, current layer is {layer}")
         # Compute rank-1 update matrix
         left_vector: torch.Tensor = compute_u(
             model,
