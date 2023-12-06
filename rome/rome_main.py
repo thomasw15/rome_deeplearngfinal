@@ -41,6 +41,7 @@ def apply_rome_to_model(
 
         with torch.no_grad():
             for w_name, (delta_u, delta_v) in deltas.items():
+                print("w_name is:{w_name}")
                 upd_matrix =  delta_v @ delta_u.t() 
                 print("delta matrix shape:", upd_matrix.shape)
                 w = nethook.get_parameter(model, w_name)
